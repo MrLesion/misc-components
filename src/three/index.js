@@ -14,8 +14,6 @@ const isabellaVisualizer = {
         
         isabellaVisualizer.visualizer.addEventListener('tent.visualizer.cleared', () =>{
             frontOptionBtns.forEach(b => b.disabled = false)
-            //frontOptions.forEach(i => i.checked = false);
-            //frontOptions.forEach(i => i.disabled = false);
             rightGableOptions.forEach(i => i.checked = false);
             leftGableOptions.forEach(i => i.checked = false);
         });
@@ -61,7 +59,7 @@ const isabellaVisualizer = {
         }
     },
     addFront(event){
-        const maxCount = parseInt(isabellaVisualizer.visualizer.getAttribute('front-count'));
+        const maxLength = parseInt(isabellaVisualizer.visualizer.getAttribute('max-width'));
         const currentFronts = isabellaVisualizer.visualizer.getAttribute('fronts').split(',').filter(element => element);
         const currentFrontWidths = isabellaVisualizer.visualizer.getAttribute('front-widths').split(',').filter(element => element);
         let currentFrontWidth = parseInt(isabellaVisualizer.visualizer.getAttribute('front-width'));
@@ -70,9 +68,17 @@ const isabellaVisualizer = {
         currentFrontWidths.push(event.target.dataset.width);
         
         currentFrontWidth += parseInt(event.target.dataset.width);
-        if(currentFronts.length === maxCount){
-            document.querySelectorAll( '.js-front-item-btn' ).forEach(b => b.disabled = true)
-        }
+        const remainingSpace = maxLength - currentFrontWidth;
+
+        document.querySelectorAll( '.js-front-item-btn' ).forEach((btn) =>{
+            console.log(parseInt(btn.dataset.width), remainingSpace);
+            if(parseInt(btn.dataset.width) > remainingSpace){
+                btn.disabled = true;
+            } else{
+                btn.disabled = false;
+            }
+        });
+        
         isabellaVisualizer.visualizer.setAttribute('front-width', currentFrontWidth);
         isabellaVisualizer.visualizer.setAttribute('front-widths', currentFrontWidths.join(','));
         isabellaVisualizer.visualizer.setAttribute('fronts', currentFronts.join(','));

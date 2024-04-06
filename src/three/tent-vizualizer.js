@@ -28,7 +28,9 @@ class TentVisualizer extends HTMLElement {
     }
 
     get frontWidths() {
-        return this.getAttribute( 'front-widths' );
+        const frontWidths = this.getAttribute( 'front-widths' );
+        return frontWidths.split(',')
+            .filter(element => element);
     }
 
     set frontWidths( val ) {
@@ -36,7 +38,9 @@ class TentVisualizer extends HTMLElement {
     }
 
     get fronts() {
-        return this.getAttribute( 'fronts' );
+        const fronts = this.getAttribute( 'fronts' );
+        return fronts.split(',')
+            .filter(element => element);
     }
 
     set fronts( val ) {
@@ -67,12 +71,12 @@ class TentVisualizer extends HTMLElement {
         this.setAttribute( 'view', val );
     }
 
-    get width() {
-        return parseInt(this.getAttribute( 'width' ));
+    get maxWidth() {
+        return parseInt(this.getAttribute( 'max-width' ));
     }
 
-    set width( val ) {
-        this.setAttribute( 'width', val );
+    set maxWidth( val ) {
+        this.setAttribute( 'max-width', val );
     }
 
     constructor() {
@@ -140,32 +144,22 @@ class TentVisualizer extends HTMLElement {
         let position = 0;
         
         if(this.frontWidth === 0){
-            const cube = this.addRemainingSpace(position, this.width);
+            const cube = this.addRemainingSpace(position, this.maxWidth);
             this.group.add( cube );
             this.cubes.push( cube );
         } else{
-            const fronts = this.fronts.split(',').filter(element => element);
-            const frontWidths = this.frontWidths.split(',')
-                .filter(element => element);
+            const fronts = this.fronts;
+            const frontWidths = this.frontWidths;
             
             
-            let availableSpace = this.width - frontWidths.reduce((partialSum, a) => partialSum + parseInt(a), 0);
+            let availableSpace = this.maxWidth - frontWidths.reduce(( partialSum, a) => partialSum + parseInt(a), 0);
             fronts.forEach((front, index) =>{
                 const frontWidth = parseInt(frontWidths[index]);
-                //const cubeWidth = this.width;
-                
                 const cube = this.generateCube(position, frontWidth);
                 this.group.add( cube );
                 this.cubes.push( cube );
-
-                const frontPosition = index > 0 ? parseInt(this.frontWidths.split(',').filter(element => element)[index]) : 0;
-                console.log(frontPosition, frontWidth)
                 position += frontWidth;
-                
-                
             });
-            console.log(`Available space left: ${availableSpace}`);
-            console.log(`Available pos: ${position}`);
             const remainingCube = this.addRemainingSpace(position, availableSpace);
             this.group.add( remainingCube );
             this.cubes.push( remainingCube );
@@ -174,47 +168,27 @@ class TentVisualizer extends HTMLElement {
         new THREE.Box3().setFromObject( this.group  ).getCenter( this.group.position ).multiplyScalar( -1 );
         this.scene.add( this.group );
 
-        const controls = new OrbitControls( this.camera, this.renderer.domElement );
-        controls.enableDamping = true;
-        //controls.dispose();
-        this.resizeRendererToDisplaySize();
-        this.switchView(this.view);
-    }
-
-    initialize() {
-        this.textureLoader = new THREE.TextureLoader();
-        var backgroundTexture = this.textureLoader.load( './public/gradient.png' );
-        
-        this.scene = new THREE.Scene();
-        this.scene.background = backgroundTexture;
-        this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-        this.camera.position.set( 12, 5, 10 );
-        this.renderer = new THREE.WebGLRenderer();
-        this.appendChild( this.renderer.domElement );
-        let position = 0;
-        this.group = new THREE.Group();
-        //let innerGroup = new THREE.Group();
-        for ( let i = 0; i < this.frontCount; i++ ) {
-            const cube = this.generateCube(position);
-            //innerGroup.add(cube);
-            /*
-            if(innerGroup.children.length === 2){
-                this.group.add( innerGroup );
-                innerGroup = new THREE.Group();
-            }
-            
-             */
-            this.group.add( cube );
-            this.cubes.push( cube );
-            position += CUBE_WIDTH;
+        let g = new THREE.BoxGeometry(this.maxWidth, 2, 1);
+        let pos = g.attributes.position;
+        //pos.x = CUBE_HEIGHT;
+        for(let i = 0; i < pos.count; i++){
+            if (pos.getX(i) < 0 && pos.getY(i) > 0) pos.setY(i, 0); // change Y-coord by condition
         }
-        console.log(this.group);
-        new THREE.Box3().setFromObject( this.group  ).getCenter( this.group .position ).multiplyScalar( - 1 );
-        this.scene.add( this.group );
+        g.computeVertexNormals(); // don't forget to re-compute normals
+
+        let m = new THREE.MeshLambertMaterial({color: "aqua"});
+        let o = new THREE.Mesh(g, m);
+        o.position.y = CUBE_HEIGHT;
+        this.scene.add(o);
 
         const controls = new OrbitControls( this.camera, this.renderer.domElement );
         controls.enableDamping = true;
-        controls.dispose();
+        controls.enablePan = false;
+        controls.enableZoom = false;
+        controls.minPolarAngle = Math.PI / 2.4;
+        controls.maxPolarAngle = Math.PI / 2.4;
+        
+        //controls.dispose();
         this.resizeRendererToDisplaySize();
         this.switchView(this.view);
     }
@@ -247,11 +221,10 @@ class TentVisualizer extends HTMLElement {
     }
     
     addRemainingSpace(position, cubeWidth){
-        
         const cube = this.generateCube(position, cubeWidth);
-        var geo = new THREE.EdgesGeometry( cube.geometry );
-        var mat = new THREE.LineBasicMaterial( { color: 0x000000 } );
-        var wireframe = new THREE.LineSegments( geo, mat );
+        const geometry = new THREE.EdgesGeometry( cube.geometry );
+        const material = new THREE.LineBasicMaterial( { color: 0x000000 } );
+        const wireframe = new THREE.LineSegments( geometry, material );
         cube.add( wireframe );
         return cube;
     }
@@ -259,8 +232,7 @@ class TentVisualizer extends HTMLElement {
     updateFaces(){
         this.resetScene();
         this.buildScene();
-        const fronts = this.fronts.split(',').filter(element => element);
-        console.log('update faces', fronts);
+        const fronts = this.fronts;
         const defaultTexture = this.textureLoader.load( './public/white.png' );
         this.cubes.forEach((cube, index) =>{
             if(fronts[index] !== undefined){
@@ -313,8 +285,8 @@ class TentVisualizer extends HTMLElement {
     }
     
     generateCube(position, cubeWidth){
-        console.log('generateCube', position, cubeWidth);
         const geometry = new THREE.BoxGeometry( cubeWidth, CUBE_HEIGHT, CUBE_DEPTH );
+        geometry.translate( cubeWidth / 2, 0, 0 );
         const defaultTexture = this.textureLoader.load( './public/white.png' );
         
         const materials = [
@@ -395,7 +367,7 @@ class TentVisualizer extends HTMLElement {
         const list = this.querySelector('.js-selected-fronts');
         if(list){
             list.innerHTML = '';
-            const fronts = this.fronts.split(',').filter(element => element);
+            const fronts = this.fronts;
             fronts.forEach((front, index) =>{
                 const item = buildHtmlElement('div', {class: 'list-group-item js-selected-front selected-front-item list-group-item-action', 'data-index': index, draggable: true});
                 const itemText = buildHtmlElement('span', {style: 'pointer-events:none;'}, front);
@@ -406,10 +378,15 @@ class TentVisualizer extends HTMLElement {
             });
             list.querySelectorAll('.js-selected-front-remove').forEach(i => i.addEventListener('click', (event) => {
                 const index = parseInt(event.target.closest('.js-selected-front').dataset.index);
-                let fronts = this.fronts.split(',').filter(element => element);
-                console.log(index);
+                let fronts = this.fronts;
+                let frontWidths = this.frontWidths;
+                const frontWidthToRemove = parseInt(frontWidths[index]);
                 fronts.splice(index, 1);
+                frontWidths.splice(index, 1);
+                this.frontWidths = frontWidths.join(',');
+                this.frontWidth = this.frontWidth - frontWidthToRemove;
                 this.fronts = fronts.join(',');
+                
                 this.emit('tent.visualizer.cleared');
             }))
         }
@@ -420,12 +397,9 @@ class TentVisualizer extends HTMLElement {
         sortableList.addEventListener('dragstart', this.onSortStart.bind(this));
         sortableList.addEventListener('dragend', this.onSortEnd.bind(this));
         sortableList.addEventListener('dragover', this.onSortOver.bind(this));
-        
-        
     }
     
     onSortStart(event){
-        console.log(event);
         this.draggableItem = event.target;
         setTimeout(() => {
             this.draggableItem.classList.add('dragged');
@@ -449,7 +423,7 @@ class TentVisualizer extends HTMLElement {
         this.draggableItem.classList.remove('dragged');
         this.draggableItem = null;
         const newIndexes = Array.from(sortableList.querySelectorAll('.js-selected-front')).map(i => parseInt(i.dataset.index));
-        let fronts = this.fronts.split(',').filter(element => element);
+        let fronts = this.fronts;
         fronts.forEach((front, index) =>{
             let removedItem = fronts.splice(index, 1)[0];
             fronts.splice(newIndexes.indexOf(index), 0, removedItem);
