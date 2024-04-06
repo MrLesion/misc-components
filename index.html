@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Web components</title>
+  <style>
+    body{
+        font-family: Arial, Helvetica, sans-serif;
+    }
+  </style>
+  <script src="./dist/githubButton.js"></script>
+  <script src="./dist/search.js"></script>
+  <script src="./dist/customSelect.js"></script>
+  <script src="./dist/popup.js"></script>
+  <script src="./dist/freeShippingBar.js"></script>
+  
+</head>
+<body>
+<relewise-search></relewise-search>
+<br>
+<br>
+<hr>
+<br>
+<br>
+<h3>Github button</h3>
+<github-button text="Github" link="https://github.com/MrLesion/cothreesixty"></github-button>
+<br>
+<br>
+<hr>
+<br>
+<br>
+<h3>Custom select</h3>
+<form onsubmit="trySubmit">
+  <custom-select name="somName" default="Select option" search="true" required>
+    <slot value="1">Option 1</slot>
+    <slot value="2">Option 2</slot>
+  </custom-select>
+  <button type="submit">Send</button>
+</form>
+<br>
+<br>
+<hr>
+<br>
+<br>
+<div style="width: 800px;margin:0 auto;">
+  
+  <free-shipping-bar 
+          id="the-first-free-shipping-bar"
+          custom-style='{"progressColor":"#db052b"}'
+          initOnLoad="false"
+          min="0"
+          max="5000"
+          current-value="950"
+          fee-limit="800"
+          fee-label-top="kr. 800"
+          fee-label-bottom="Opnå gebyrfri"
+          shipping-limit="3500"
+          shipping-label-top="kr. 3500"
+          shipping-label-bottom="Opnå fri levering">
+  
+    <template>
+      <div class="free-shipping-bar">
+        <div class="free-shipping-bar--progress">
+          <div class="free-shipping-bar--label position-top align-left">{{ min }}</div>
+          
+          <div class="free-shipping-bar--label position-top" :style="left: {{ feeLimitCalculated }}%;">{{ feeLabelTop }}</div>
+          <div class="free-shipping-bar--label position-bottom" :class="{{ feeLimitReached }}" :style="left: {{ feeLimitCalculated }}%;">{{ feeLabelBottom }}</div>
+          <div class="free-shipping-bar--label position-top" :style="left: {{ shippingLimitCalculated }}%;">{{ shippingLabelTop }}</div>
+          <div class="free-shipping-bar--label position-bottom" :class="{{ shippingLimitReached }}" :style="left: {{ shippingLimitCalculated }}%;">{{ shippingLabelBottom }}</div>
+          
+          <div class="free-shipping-bar--line" :style="width: {{ currentValueCalculated }}%;"></div>
+          <div class="free-shipping-bar--current" :style="left: {{ currentValueCalculated }}%;"></div>
+          <div class="free-shipping-bar--pipe" :style="left: {{ feeLimitCalculated }}%;"></div>
+          <div class="free-shipping-bar--pipe" :style="left: {{ shippingLimitCalculated }}%;"></div>
+
+          <div class="free-shipping-bar--label position-top align-right" :style="left: 100%;">+</div>
+        </div>
+      </div>
+    </template>
+  </free-shipping-bar>
+</div>
+<button type="button" id="tryUpdateBar">update value</button>
+<pop-up position="1">
+  <template>
+    <h2>Hej</h2>
+    <p>Du er sød</p>
+  </template>
+</pop-up>
+<br>
+<br>
+<hr>
+<br>
+<br>
+<div>
+  <a href="#" class="js-add-to-favorites" data-favorite-id="1">Add to favoritess 1</a>
+  <a href="#" class="js-add-to-favorites" data-favorite-id="2">Add to favoritess 2</a>
+  <a href="#" class="js-add-to-favorites" data-favorite-id="3">Add to favoritess 3</a>
+  <a href="#" class="js-remove-from-favorites" data-favorite-id="3">remove favoritess 3</a>
+</div>
+<script>
+    const shippingBarInstance = document.getElementById('the-first-free-shipping-bar');
+
+    shippingBarInstance.addEventListener('loaded', (event) => {
+        var feelabel = (shippingBarInstance.data.currentValue + 300 >= shippingBarInstance.data.feeLimit)? 'Gebyrfrit opnået!' : shippingBarInstance.data.feeLabelBottom;
+        var shippinglabel = (shippingBarInstance.data.currentValue + 300 >= shippingBarInstance.data.shippingLimit)? 'Fri levering opnået!' : shippingBarInstance.data.shippingLabelBottom;
+        shippingBarInstance.update({
+            customStyle:{
+              progressColor: '#db052b'  
+            },
+            min: 0,
+            max: 5000,
+            currentValue: 950,
+            feeLimit: 800,
+            feeLabelTop: 'kr. 800',
+            feeLabelBottom: feelabel,
+            shippingLabelTop: 'kr. 3500',
+            shippingLimit: 3500,
+            shippingLabelBottom: shippinglabel
+        });
+    });
+    document.querySelector('#tryUpdateBar').addEventListener('click', () =>{
+        var feelabel = (shippingBarInstance.data.currentValue + 300 >= shippingBarInstance.data.feeLimit)? 'Gebyrfrit opnået!' : shippingBarInstance.data.feeLabelBottom;
+        var shippinglabel = (shippingBarInstance.data.currentValue + 300 >= shippingBarInstance.data.shippingLimit)? 'Fri levering opnået!' : shippingBarInstance.data.shippingLabelBottom;
+        shippingBarInstance.update({
+            currentValue: shippingBarInstance.data.currentValue + 300,
+            feeLabelBottom: feelabel,
+            shippingLabelBottom: shippinglabel
+        });
+    })
+  function trySubmit(event){
+      console.log('dame');
+      event.preventDefault();
+      console.log(event);
+      return false;
+  }
+</script>
+</body>
+</html>

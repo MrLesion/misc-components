@@ -1,0 +1,21 @@
+{
+  "name": "components",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --env=mode=production",
+    "start": "webpack --watch --env=mode=development"
+  },
+  "author": "Lasse Hove Nielsen",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@xenova/transformers": "^2.7.0",
+    "autobahn-browser": "^22.11.1",
+    "three": "^0.163.0"
+  }
+}

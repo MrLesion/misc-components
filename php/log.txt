@@ -1,0 +1,28 @@
+<|-------------------------
+
+Running Cronjob: Cleanup session directories - November 16, 2020, 7:48 pm
+
+Checking Directory: sessions/U15JL
+
+-------------------------|>
+
+<|-------------------------
+
+Running Cronjob: Cleanup session directories - November 16, 2020, 7:49 pm
+
+Checking Directory: sessions/U15JL
+
+-------------------------|>
+
+
+<|-------------------------
+
+Running Cronjob: Cleanup session directories - November 17, 2020, 6:00 pm
+
+Checking Directory: sessions/1AKR3
+Checking Directory: sessions/T2N0Y
+Checking Directory: sessions/U15JL
+
+-------------------------|>
+
+

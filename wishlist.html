@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Web components</title>
+  <style>
+    body{
+        font-family: Arial, Helvetica, sans-serif;
+      padding: 0;
+      margin:0;
+    }
+    *{
+      box-sizing: border-box;
+    }
+    .grid{
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 50px;
+    }
+    .grid > .grid-item{
+      border: 1px solid;
+      padding: 1em;
+      position: relative;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+    }
+    .grid > .grid-item img{
+      max-width: 100%;
+      max-height: 300px;
+      margin: 0 auto;
+    }
+
+    .grid > .grid-item .price{
+      font-weight: bold;
+      font-size: 1.2em;
+      margin:auto 0 0 0;
+      padding: 1em;
+      background: #f1f1f1;
+    }
+    
+    .wishlist-btn{
+      opacity: 0;
+      text-decoration: none;
+      color: black;
+      font-size: 2em;
+      font-weight: bold;
+      position: absolute;
+      bottom: 26px;
+      right: 26px;
+      
+    }
+    .wishlist-btn.is-loaded{
+      opacity: 1;
+    }
+    .wishlist-btn::after{
+      content: '\2764';
+      filter: drop-shadow(0px 0px 5px rgba(255,255,255,1));
+      transition: all .3s ease;
+    }
+    .wishlist-btn.is-add{
+      transform: scale(.75);
+    }
+    .wishlist-btn.is-add::after{
+      color: #999;
+    }
+
+    .wishlist-btn.is-remove::after{
+      color: red;
+    }
+    .list-elem{
+      padding: 1em;
+      margin: 0;
+      list-style: none;
+      white-space: nowrap;
+    }
+    .list-elem li{
+      padding: 5px;
+    }
+    .list-action{
+      display: flex;
+      width: 25vw;
+      
+    }
+    .list-action button{
+      background: #f1f1f1;
+      border: 0;
+      padding: .5em 1em;
+      flex: 1 1 100%;
+      font-size: 1.2em;
+      cursor: pointer;
+      white-space: nowrap;
+      
+    }
+    nav{
+      padding: 1em;
+      background: #1e1e1e;
+      color:#f1f1f1;
+      position: sticky;
+      top:0;
+      z-index: 7;
+    }
+    nav ul{
+      padding: 0;
+      margin:0;
+      list-style: none;
+    }
+    nav ul li{
+      
+      display: inline-block;
+    }
+    nav ul li a{
+      margin-right: 2em;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+    }
+    main{
+      transition: margin-left .3s;
+    }
+    .content{
+      padding: 1em;
+    }
+    aside {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      z-index: 9;
+      top: 0;
+      left: 0;
+      background-color: white;
+      overflow-x: hidden;
+      transition: 0.3s;
+      box-shadow: 3px 0 5px rgba(0,0,0, .25);
+    }
+    .overlay{
+      background: rgba(0,0,0,.5);
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      cursor: pointer;
+      z-index: 8;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .sidenav-header{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1em;
+      background: #2f2f2f;
+      color: #f1f1f1;
+      position: relative;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+    aside .close-btn {
+      text-decoration: none;
+      color: #f1f1f1;
+      position: absolute;
+      right: .5em;
+      font-size: 2em;
+    }
+    
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 1em;
+      padding-bottom: 1em;
+      border-bottom: 1px solid #ccc;
+    }
+    .category-item{
+      align-self: center;
+      flex: 1 1 20%;
+      padding: .75em;
+      text-align: center;
+      border: 1px solid #000;
+      border-radius: 5em;
+      margin: .5em;
+      position:relative;
+      background: #f1f1f1;
+      transition: all .3s ease;
+      font-size: .85em;
+      color: #000;
+    }
+    .category-item:hover, .category-item.selected{
+      background: #000;
+      color: #f1f1f1;
+      border-color: #f1f1f1;
+    }
+    .category-item a{
+      display: block;
+      height: 100%;
+      text-decoration: none;
+      color: inherit;
+      
+    }
+  </style>
+  <script src="./dist/wishlist.js"></script>
+</head>
+<body>
+<aside class="sidenav">
+  <div class="sidenav-header">
+    My Wish List
+    <a href="javascript:void(0)" class="close-btn js-close-btn">&times;</a>
+  </div>
+  <ul class="list-elem">
+  </ul>
+  <div class="list-action">
+    <button type="button" class="js-add-to-cart" disabled>Add to cart</button>
+  </div>
+</aside>
+
+<main class="main">
+  <nav>
+    <ul>
+      <li>
+        <a href="javascript:void(0)">Home</a>
+        <a href="javascript:void(0)">Products</a>
+        <a href="javascript:void(0)" class="js-list-btn">Wish List</a>
+      </li>
+    </ul>
+  </nav>
+  <div class="content">
+    <div class="categories"></div>
+    <h1 class="product-header"></h1>
+    <div class="grid"></div>
+  </div>
+</main>
+</body>
+</html>

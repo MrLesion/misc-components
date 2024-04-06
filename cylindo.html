@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>$Title$</title>
+  <link rel="preconnect" href="https://content.cylindo.com" crossorigin />
+</head>
+<body>
+
+<h4>Material</h4>
+<select class="js-cylindo-variants" name="MATERIAL">
+  <option value="HK_Fabric_Rebel_LightGrey9711" selected>HK_Fabric_Rebel_LightGrey9711</option>
+  <option value="HK_Fabric_Adore_Anthracite3151">HK_Fabric_Adore_Anthracite3151</option>
+  <option value="HK_Fabric_Adore_Coffee3216">HK_Fabric_Adore_Coffee3216</option>
+  <option value="HK_Fabric_Adore_Copper3156">HK_Fabric_Adore_Copper3156</option>
+  <option value="HK_Fabric_Adore_DarkGrey3158">HK_Fabric_Adore_DarkGrey3158</option>
+</select>
+
+
+<h4>Optional legs</h4>
+<ul>
+  <li><label for="LEGS_Reset">None</label><input class="js-cylindo-optional" type="radio" name="LEGS" value="" id="LEGS_Reset" checked></li>
+  <li><label for="HK_Stamford_Ben_0K4B">HK_Stamford_Ben_0K4B</label><input class="js-cylindo-optional" type="radio" name="LEGS" value="HK_Stamford_Ben_0K4B" id="HK_Stamford_Ben_0K4B"></li>
+  <li><label for="HK_Stamford_Ben_2H4K">HK_Stamford_Ben_2H4K</label><input class="js-cylindo-optional" type="radio" name="LEGS" value="HK_Stamford_Ben_2H4K" id="HK_Stamford_Ben_2H4K"></li>
+  <li><label for="HK_Stamford_Ben_2M1K5">HK_Stamford_Ben_2M1K5</label><input class="js-cylindo-optional" type="radio" name="LEGS" value="HK_Stamford_Ben_2M1K5" id="HK_Stamford_Ben_2M1K5"></li>
+  <li><label for="HK_Stamford_Ben_098K2">HK_Stamford_Ben_098K2</label><input class="js-cylindo-optional" type="radio" name="LEGS" value="HK_Stamford_Ben_098K2" id="HK_Stamford_Ben_098K2"></li>
+</ul>
+
+<h4>Optional recliner</h4>
+<ul>
+  <li><label for="RECLINE_Reset">None</label><input class="js-cylindo-optional" type="radio" name="RECLINE" value="" id="RECLINE_Reset" checked></li>
+  <li><label for="HK_stamford_recliner_seat">HK_stamford_recliner_seat</label><input class="js-cylindo-optional" type="radio" name="RECLINE" value="HK_stamford_recliner_seat" id="HK_stamford_recliner_seat"></li>
+  <li><label for="HK_stamford_all_recliners">HK_stamford_all_recliners</label><input class="js-cylindo-optional" type="radio" name="RECLINE" value="HK_stamford_all_recliners" id="HK_stamford_all_recliners"></li>
+</ul>
+
+<div class="js-initial-cylindo-state" hidden>MATERIAL HK_Fabric_Rebel_LightGrey9711</div>
+
+<cylindo-viewer customer-id="5080" code="5218_HK_STAMFORD_ARMREST_ARM2601">
+  <cylindo-360></cylindo-360>
+  <cylindo-dimension-shot dimension-code="UXPP" unit="cm"></cylindo-dimension-shot>
+  <cylindo-swatch feature-code="MATERIAL"  />
+</cylindo-viewer>
+
+<script
+        type="module"
+        src="https://viewer-cdn.cylindo.com/v1/index.mjs"
+        defer
+></script>
+<script defer src="./dist/cylindo.js"></script>
+</body>
+</html>

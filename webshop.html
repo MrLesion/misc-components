@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Webshop components</title>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+    
+
+</head>
+<body>
+    <webshop-variant-combinations value="VO14.VO23">
+        <webshop-variant-selector label="Color" value="">
+            <select name="VG1">
+                <option value="VO12">Green</option>
+                <option value="VO13">Blue</option>
+                <option value="VO14">Red</option>
+                <option value="VO15">Black</option>
+            </select>
+        </webshop-variant-selector>
+        <webshop-variant-selector label="Size" value="">
+            <select name="VG2">
+                <option value="VO22">S</option>
+                <option value="VO23">M</option>
+                <option value="VO24">L</option>
+                <option value="VO25">XL</option>
+            </select>
+        </webshop-variant-selector>
+        <form>
+            <input type="hidden" name="CartCmd" value="Add">
+            <input type="hidden" name="ProductId" value="PROD1234">
+            <input type="hidden" name="VariantId" value="VO14.VO23">
+            <input type="number" name="Quantity" value="1">
+            <button type="submit">Add to cart</button>
+        </form>
+        
+    </webshop-variant-combinations>
+    <webshop-carousel>
+        
+    </webshop-carousel>
+    <script src="./dist/carousel.js" defer></script>
+    <script src="./dist/webshopVariantCombinations.js" defer></script>
+<script src="./dist/webshopVariantSelector.js" defer></script>
+</body>
+</html>
