@@ -61,10 +61,21 @@
     <a class="navbar-brand">Navbar</a>
     <div class="d-flex">
       <div class="me-2">
+        <label>Længde</label>
         <select class="form-select js-select-width">
-          <option value="2">300</option>
-          <option value="3" selected>350</option>
-          <option value="4">390</option>
+          <option value="20">550 cm</option>
+          <option value="25">650 cm</option>
+          <option value="30" selected>750 cm</option>
+          <option value="35">850 cm</option>
+          <option value="40">950 cm</option>
+        </select>
+      </div>
+      <div class="me-2">
+        <label>Veranda</label>
+        <select class="form-select js-select-porch">
+          <option value="none">Uden veranda</option>
+          <option value="open">Med veranda</option>
+          <option value="closed">Med lukket veranda</option>
         </select>
       </div>
       <div class="d-flex align-items-center">
@@ -152,7 +163,7 @@
       
     </div>
     <div class="col-8">
-      <tent-visualizer class="mb-3 d-block" front-count="3" front-width="0" front-widths="" fronts="" left="" right="" view="right" max-width="35"></tent-visualizer>
+      <tent-visualizer class="mb-3 d-block" front-widths="" fronts="" left-gable="" right-gable="" porch="none" view="right" max-width="35"></tent-visualizer>
       
     </div>
   </div>

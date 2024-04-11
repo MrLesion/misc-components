@@ -21,23 +21,21 @@ const isabellaVisualizer = {
         frontOptionBtns.forEach(i => i.addEventListener('click', (event) =>{
             isabellaVisualizer.addFront(event);
         }));
-        /*
-        frontOptions.forEach(i => i.addEventListener('change', (event) =>{
-            isabellaVisualizer.selectFrontItem(event);
-        }));
-        
-         */
         
         rightGableOptions.forEach(i => i.addEventListener('change', (event) =>{
-            isabellaVisualizer.visualizer.setAttribute('right', event.target.value);
+            isabellaVisualizer.visualizer.setAttribute('right-gable', event.target.value);
         }));
 
         leftGableOptions.forEach(i => i.addEventListener('change', (event) =>{
-            isabellaVisualizer.visualizer.setAttribute('left', event.target.value);
+            isabellaVisualizer.visualizer.setAttribute('left-gable', event.target.value);
         }));
 
         document.querySelector('.js-select-width').addEventListener('change', (event) =>{
-            isabellaVisualizer.visualizer.setAttribute('front-count', event.target.value);
+            isabellaVisualizer.visualizer.setAttribute('max-width', event.target.value);
+        });
+
+        document.querySelector('.js-select-porch').addEventListener('change', (event) =>{
+            isabellaVisualizer.visualizer.setAttribute('porch', event.target.value);
         });
 
         document.querySelectorAll( '.js-view-btn' ).forEach( btn => btn.addEventListener( 'click', ( event ) => {
@@ -45,24 +43,11 @@ const isabellaVisualizer = {
             isabellaVisualizer.visualizer.setAttribute('view', direction);
         } ) );
     },
-    selectFrontItem: (event) =>{
-        const maxCount = parseInt(isabellaVisualizer.visualizer.getAttribute('front-count'));
-
-        const checked = Array.from(document.querySelectorAll( '.js-front-item' )).filter(i => i.checked).map(i => i.value);
-        isabellaVisualizer.visualizer.setAttribute('fronts', checked.join(','));
-
-        const currentFaces = isabellaVisualizer.visualizer.getAttribute('fronts').split(',').filter(element => element);
-        if(currentFaces.length === maxCount){
-            Array.from(document.querySelectorAll( '.js-front-item' )).filter(i => !i.checked).forEach(i => i.disabled = true);
-        } else{
-            Array.from(document.querySelectorAll( '.js-front-item' )).filter(i => !i.checked).forEach(i => i.disabled = false);
-        }
-    },
     addFront(event){
         const maxLength = parseInt(isabellaVisualizer.visualizer.getAttribute('max-width'));
         const currentFronts = isabellaVisualizer.visualizer.getAttribute('fronts').split(',').filter(element => element);
         const currentFrontWidths = isabellaVisualizer.visualizer.getAttribute('front-widths').split(',').filter(element => element);
-        let currentFrontWidth = parseInt(isabellaVisualizer.visualizer.getAttribute('front-width'));
+        let currentFrontWidth = currentFrontWidths.reduce(( partialSum, a) => partialSum + parseInt(a), 0);
         
         currentFronts.push(event.target.dataset.value);
         currentFrontWidths.push(event.target.dataset.width);
@@ -79,7 +64,6 @@ const isabellaVisualizer = {
             }
         });
         
-        isabellaVisualizer.visualizer.setAttribute('front-width', currentFrontWidth);
         isabellaVisualizer.visualizer.setAttribute('front-widths', currentFrontWidths.join(','));
         isabellaVisualizer.visualizer.setAttribute('fronts', currentFronts.join(','));
     }
